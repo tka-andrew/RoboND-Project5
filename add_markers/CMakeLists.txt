@@ -205,5 +205,8 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
+add_executable(test_markers src/test_markers.cpp)
+target_link_libraries(test_markers ${catkin_LIBRARIES})
+
 add_executable(add_markers src/add_markers.cpp)
 target_link_libraries(add_markers ${catkin_LIBRARIES})
