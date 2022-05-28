@@ -38,14 +38,12 @@ void checkpointCallback(const std_msgs::String::ConstPtr& msg)
 
 int main( int argc, char** argv )
 {
-  ros::init(argc, argv, "basic_shapes");
-  ros::NodeHandle n;
-  ros::Rate loop_rate(10);
-  marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
-  
-  ros::Subscriber sub = n.subscribe("checkpoint", 10, checkpointCallback);
+    ros::init(argc, argv, "basic_shapes");
+    ros::NodeHandle n;
+    ros::Rate loop_rate(10);
+    marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-  uint32_t shape = visualization_msgs::Marker::CUBE;
+    ros::Subscriber sub = n.subscribe("checkpoint", 10, checkpointCallback);
 
     // Set the frame ID and timestamp.  See the TF tutorials for information on these.
     marker.header.frame_id = "/map";
@@ -56,7 +54,7 @@ int main( int argc, char** argv )
     marker.ns = "basic_shapes";
     marker.id = 0;
 
-    // Set the marker type.  Initially this is CUBE, and cycles between that and SPHERE, ARROW, and CYLINDER
+  	uint32_t shape = visualization_msgs::Marker::CUBE;
     marker.type = shape;
 
     // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
@@ -106,4 +104,6 @@ int main( int argc, char** argv )
       ros::spinOnce();
       loop_rate.sleep();
     }
+  
+  	return 0;
 }
