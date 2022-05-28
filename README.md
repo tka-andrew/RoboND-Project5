@@ -2,51 +2,41 @@
 
 This is my project submission for Project5: Home Service Robot of [Udacity Nanodegree - Robotics Software Engineer](https://www.udacity.com/course/robotics-software-engineer--nd209?irclickid=U9u1PgV1xxyIROOV3m3wlTMuUkD0yqTMORvH3A0&irgwc=1&utm_source=affiliate&utm_medium=&aff=2298976&utm_term=&utm_campaign=__&utm_content=&adid=786224).
 
-## Requirements
-1. Git clone all folders into your workspace/src.
-2. Install xterm: `sudo apt-get install xterm`
-3. Git clone the following packages into your workspace and `catkin make`:
-    ```
-    git clone https://github.com/ros-perception/slam_gmapping
-    git clone https://github.com/turtlebot/turtlebot
-    git clone https://github.com/turtlebot/turtlebot_interactions
-    git clone https://github.com/turtlebot/turtlebot_simulator
-    ```
-4. ROS navigation stack, map_server
+## Write-up
+### Simulatenous Localization and Mapping (SLAM)
+Mapping is about estimating the map with given measurements and robot's pose whereas Localization is about estimating the robot's pose with given motion control, map, and measurements. When the robot doesn't have both map and robot's pose, SLAM is what the robot needs. The inputs to the SLAM problem are measurements and controls as inputs, whereas the outputs are maps and trajectory/pose.
 
-## Overall process
-1. Simulation setup
-    - turtlebot packages are git cloned and used in this project
-    - the simple world file in the `worlds` folder is used
-2. Mapping
-    - gmapping package is used to perform SLAM
-    - the turtlebot_teleop package is used to navigate the turtlebot around during mapping process
-    - the map file is then saved using map_server
-    - the map files are stored in the `maps` folder
-3. Navigation and Localization
-    - move_base package and amcl package are used to perform navigation and localization
-4. Navigation Goal node
-    - with the amcl and rviz, we can get the poses of turtlebot on the map
-    - the locations of interests are then recorded
-    - a pick_objects C++ node is written to autonomously navigate the robot to the 2 goals
-    - upon reaching each goal, the pick_objects C++ node has a publisher internally that will publish its current checkpoint (either 'A' or 'B'), which will be subscribed by add_markers node
-5. Mimic of item pick-up and drop-off process
-    - a add_markers C++ node is written to mimic an item being picked up and dropped off
-    - in order to view the marker on rviz, it has to be added to the rviz, which is already done by the home_service.rviz stored in the `rvizConfig` folder
-    - initially, the virtual marker will be displayed at position A
-    - in the add_markers node, there is a subscriber subcribing to the checkpoint of the turtlebot
-    - when it was informed that the current checkpoint of robot is A: hide the marker to mimic pick up process
-     - when it was informed that the current checkpoint of robot is B: hide the marker to mimic drop off process
-6. Shell scripts
-    - shell scripts are written to launch multiple ROS nodes at once
-    - the shell scripts are stored in the `scripts` folder
+[gmapping](http://wiki.ros.org/gmapping) ROS package is used in this project. Underlying this package, it provides a ROS node called slam_gmapping which takes in laser scan and tf data as inputs, and then generates a 2-D occupancy grid map. It is based on the Grid-based FastSLAM algorithm. Grid-based FastSLAM algorithm is able to model the environment using grid maps without predefining any landmark position, this explains why the slam_gmapping node is able to perform mapping without any predefined landmarks.
 
+The robot has to move around to update the map, this can be done either through manual teleoperation or by using the '2D Nav Goal' feature on RVIZ.
+
+Once the mapping is done, the map_saver command-line utility of [map-server](http://wiki.ros.org/map_server) ROS package can be used to save the map.
+
+Side note: Turtlebot doesn't have a laser scanner, it only has an RGB-D camera. Howewer, its launch file does have a depthimage_to_lasercan node which converts the depthimage into laser scan data. Hence, gmapping package can be used for Turtlebot.
+
+### Localization
+Localization is about estimating the robot's pose with given motion control, map, and measurements. With the map generated and saved using gmapping and map_server packages, the robot can now perform localization using the [amcl](http://wiki.ros.org/amcl) package.
+
+AMCL stands for Adaptive Monte Carlo Localization, which is a variant of Monte Carlo Localization(MCL). MCL is able to solve both local and global localization problems. It uses particles to localize the robot's pose. If you look at the RVIZ, initially the green arrows are scattered around, but after moving the robot around, the arrows start to converge and more accurately estimating the robot's pose.
+
+AMCL offers a significant computational advantage over MCL as it is able to dynamically adjust the number of particles over a period of time as the robot navigates around in the map. 
+
+The inputs required for this amcl package are laser-based map, laser scans, and transform messages. Hence, the amcl launch file normally also runs the [map-server](http://wiki.ros.org/map_server) node to provide map data as a ROS service. Again, since the turtlebot has the fake laser scanner data, amcl package can be used for Turtlebot as well.
+
+### Navigation
+The [move_base](http://wiki.ros.org/move_base) ROS package is used to perform navigation. With this package, we can define a navigation goal position on the map, and then the robot will navigate to it.
+
+This move_base ROS node has a global planner that finds the optimal path with a prior knowledge of the environment and static obstacles through global costmap. Meanwhile it also has a local planner that recalculates the path to avoid dynamic obstacles noticed by local costmap.
+
+Besides that, the move_base ROS node is also able to perform recovery behaviors when the robot perceives itself as stuck. 
+
+The move_base node provides an implementation of the SimpleActionServer. Hence, we can use SimpleActionClient to publish our goal to that server, then the ROS node will start the navigation. To learn about ROS Action and how to write the SimpleActionClient, refer to [actionlib roswiki](http://wiki.ros.org/actionlib).
 
 ## Usage
 ### Mapping
-1. `cd` into the scripts folder and run the turtlebot_mapping.sh
+1. `cd` into the scripts folder and run the mapping.sh
     ```
-    ./turtlebot_mapping.sh
+    ./mapping.sh
     ```
 2. Navigate the robot around to perform mapping
 3. Run the following to save the map
