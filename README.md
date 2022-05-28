@@ -3,9 +3,9 @@
 This is my project submission for Project5: Home Service Robot of [Udacity Nanodegree - Robotics Software Engineer](https://www.udacity.com/course/robotics-software-engineer--nd209?irclickid=U9u1PgV1xxyIROOV3m3wlTMuUkD0yqTMORvH3A0&irgwc=1&utm_source=affiliate&utm_medium=&aff=2298976&utm_term=&utm_campaign=__&utm_content=&adid=786224).
 
 ## Requirements
-1. Git clone this project into your workspace.
+1. Git clone all folders into your workspace/src.
 2. Install xterm: `sudo apt-get install xterm`
-3. Clone the following packages into your workspace and `catkin make`:
+3. Git clone the following packages into your workspace and `catkin make`:
     ```
     git clone https://github.com/ros-perception/slam_gmapping
     git clone https://github.com/turtlebot/turtlebot
