@@ -10,7 +10,7 @@ Mapping is about estimating the map with given measurements and robot's pose whe
 
 The robot has to move around to update the map, this can be done either through manual teleoperation or by using the '2D Nav Goal' feature on RVIZ.
 
-Once the mapping is done, the map_saver command-line utility of [map-server](http://wiki.ros.org/map_server) ROS package can be used to save the map.
+Once the mapping is done, the map_saver command-line utility of [map_server](http://wiki.ros.org/map_server) ROS package can be used to save the map.
 
 Side note: Turtlebot doesn't have a laser scanner, it only has an RGB-D camera. Howewer, its launch file does have a depthimage_to_lasercan node which converts the depthimage into laser scan data. Hence, gmapping package can be used for Turtlebot.
 
@@ -21,7 +21,7 @@ AMCL stands for Adaptive Monte Carlo Localization, which is a variant of Monte C
 
 AMCL offers a significant computational advantage over MCL as it is able to dynamically adjust the number of particles over a period of time as the robot navigates around in the map. 
 
-The inputs required for this amcl package are laser-based map, laser scans, and transform messages. Hence, the amcl launch file normally also runs the [map-server](http://wiki.ros.org/map_server) node to provide map data as a ROS service. Again, since the turtlebot has the fake laser scanner data, amcl package can be used for Turtlebot as well.
+The inputs required for this amcl package are laser-based map, laser scans, and transform messages. Hence, the amcl launch file normally also runs the [map_server](http://wiki.ros.org/map_server) node to provide map data as a ROS service. Again, since the turtlebot has the fake laser scanner data, amcl package can be used for Turtlebot as well.
 
 ### Navigation
 The [move_base](http://wiki.ros.org/move_base) ROS package is used to perform navigation. With this package, we can define a navigation goal position on the map, and then the robot will navigate to it.
