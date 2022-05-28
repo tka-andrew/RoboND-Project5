@@ -1,4 +1,4 @@
-image: /home/workspace/catkin_ws/src/maps/my_map.pgm
+image: ./my_map.pgm
 resolution: 0.050000
 origin: [-12.200000, -13.800000, 0.000000]
 negate: 0
