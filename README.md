@@ -2,6 +2,25 @@
 
 This is my project submission for Project5: Home Service Robot of [Udacity Nanodegree - Robotics Software Engineer](https://www.udacity.com/course/robotics-software-engineer--nd209?irclickid=U9u1PgV1xxyIROOV3m3wlTMuUkD0yqTMORvH3A0&irgwc=1&utm_source=affiliate&utm_medium=&aff=2298976&utm_term=&utm_campaign=__&utm_content=&adid=786224).
 
+## REQUIRED STEPS
+1. `git clone` this repo instead of downloading the zip
+2. Run the following to clone the submodules:
+    ```
+    git submodule init
+    git submodule update
+    ```
+3. OR, alternatively:
+    1. delete all submodules
+    2. make a local commit
+    3. git clone all these:
+        ```
+        git clone https://github.com/ros-perception/slam_gmapping
+        git clone https://github.com/turtlebot/turtlebot
+        git clone https://github.com/turtlebot/turtlebot_interactions
+        git clone https://github.com/turtlebot/turtlebot_simulator
+        ```
+
+
 ## Write-up
 ### Simulatenous Localization and Mapping (SLAM)
 Mapping is about estimating the map with given measurements and robot's pose whereas Localization is about estimating the robot's pose with given motion control, map, and measurements. When the robot doesn't have both map and robot's pose, SLAM is what the robot needs. The inputs to the SLAM problem are measurements and controls as inputs, whereas the outputs are maps and trajectory/pose.
